@@ -1,6 +1,6 @@
 # Project Info
 
-The goal of this maven plugin is to 
+The goal of this maven plugin is to get the project information to be able to run repair tools on it. 
 
 ## Install
 
@@ -20,7 +20,7 @@ cd /somewhere/my-project-with-failing-tests
 mvn test -DtrimStackTrace=false
 
 # look for the configuration
-mvn mvn com.github.tdurieux:project-config-maven-plugin:info -q > info.json
+mvn com.github.tdurieux:project-config-maven-plugin:info -q > info.json
 ```
 
 ## Output

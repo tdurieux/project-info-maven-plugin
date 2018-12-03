@@ -57,7 +57,7 @@ public class ProjectConfigMojo extends AbstractMojo {
 
         for (MavenProject mavenProject : reactorProjects) {
             ModuleInfo info = new ModuleInfo();
-            if (mavenProject == project) {
+            if (projectInfo.getBaseDir().equals(mavenProject.getBasedir().getAbsolutePath())) {
                 info.setName("root");
             } else {
                 info.setName(mavenProject.getName());
@@ -112,7 +112,7 @@ public class ProjectConfigMojo extends AbstractMojo {
         try {
             List<ReportTestSuite> testSuites = parser.parseXMLReportFiles();
             for (ReportTestSuite reportTestSuite : testSuites) {
-                if (reportTestSuite.getNumberOfErrors()+reportTestSuite.getNumberOfFailures() > 0) {
+                if (reportTestSuite.getNumberOfErrors() + reportTestSuite.getNumberOfFailures() > 0) {
                     result.add(reportTestSuite.getFullClassName());
                 }
             }
