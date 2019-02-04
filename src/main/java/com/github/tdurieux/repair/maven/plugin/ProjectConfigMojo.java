@@ -1,6 +1,7 @@
 package com.github.tdurieux.repair.maven.plugin;
 
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
+import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -13,6 +14,7 @@ import org.apache.maven.plugins.surefire.report.ReportTestSuite;
 import org.apache.maven.plugins.surefire.report.SurefireReportParser;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.reporting.MavenReportException;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class ProjectConfigMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         // String baseDir, int complianceLevel, List<String> sources, List<String> tests, List<String> binSources, List<String> binTests, List<String> classpath, List<String> failingTests
         ProjectInfo projectInfo = new ProjectInfo(this.project.getBasedir().getAbsolutePath(),
-                getComplianceLevel(),
+                getComplianceLevel(project),
                 getSourceFolders(),
                 getTestFolders(),
                 getBinFolders(),
@@ -62,7 +64,7 @@ public class ProjectConfigMojo extends AbstractMojo {
             } else {
                 info.setName(mavenProject.getName());
             }
-            info.setComplianceLevel(getComplianceLevel());
+            info.setComplianceLevel(getComplianceLevel(mavenProject));
             info.setBaseDir(mavenProject.getBasedir().getAbsolutePath());
             info.setClasspath(getClasspath(mavenProject));
 
@@ -77,15 +79,36 @@ public class ProjectConfigMojo extends AbstractMojo {
         System.out.println(projectInfo.toString());
     }
 
-    public int getComplianceLevel() {
+    public int getComplianceLevel(MavenProject project) {
+        for (Plugin buildPlugin : project.getBuildPlugins()) {
+            if (buildPlugin.getArtifactId().equals("maven-compiler-plugin")) {
+                Xpp3Dom conf = (Xpp3Dom) buildPlugin.getConfiguration();
+                if (conf != null) {
+                    if (conf.getChild("source") != null) {
+                        return parseJavaVersion(conf.getChild("source").getValue());
+                    }
+                }
+                break;
+            }
+        }
         int complianceLevel = 7;
         if (!source.equals("-1")) {
-            complianceLevel = Integer.parseInt(source.substring(2));
+            return parseJavaVersion(source.substring(2));
         } else if (!oldSource.equals("-1")) {
-            complianceLevel = Integer.parseInt(oldSource.substring(2));
+            return parseJavaVersion(oldSource.substring(2));
         } else if (!javaVersion.equals("-1")) {
-            complianceLevel = Integer.parseInt(javaVersion.substring(2, 3));
+            return parseJavaVersion(javaVersion);
         }
+        return complianceLevel;
+    }
+
+    private int parseJavaVersion(String javaVersion) {
+        int complianceLevel;
+        String version = javaVersion.substring(2, 3);
+        if (version.equals(".")) {
+            version = javaVersion.substring(0, 2);
+        }
+        complianceLevel = Integer.parseInt(version);
         return complianceLevel;
     }
 
