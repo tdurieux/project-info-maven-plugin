@@ -84,8 +84,9 @@ public class ProjectConfigMojo extends AbstractMojo {
             if (buildPlugin.getArtifactId().equals("maven-compiler-plugin")) {
                 Xpp3Dom conf = (Xpp3Dom) buildPlugin.getConfiguration();
                 if (conf != null) {
-                    if (conf.getChild("source") != null) {
-                        return parseJavaVersion(conf.getChild("source").getValue());
+                    Xpp3Dom source = conf.getChild("source");
+                    if (source != null && source.getValue().charAt(0) != '$') {
+                        return parseJavaVersion(source.getValue());
                     }
                 }
                 break;
