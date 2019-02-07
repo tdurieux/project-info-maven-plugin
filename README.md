@@ -6,9 +6,7 @@ The goal of this maven plugin is to get the project information to be able to ru
 
 
 ```bash
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.1:get \
-    -DrepoUrl=https://tdurieux.github.io/maven-repository/snapshots/ \
-    -Dartifact=com.github.tdurieux:project-config-maven-plugin:1.0-SNAPSHOT
+mvn org.apache.maven.plugins:maven-dependency-plugin:3.1.1:get -DremoteRepositories=https://tdurieux.github.io/maven-repository/snapshots/ -Dartifact=com.github.tdurieux:project-config-maven-plugin:1.0-SNAPSHOT;
 ``` 
 
 ## Usage
