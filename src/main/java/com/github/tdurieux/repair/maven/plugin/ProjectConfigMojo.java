@@ -94,9 +94,9 @@ public class ProjectConfigMojo extends AbstractMojo {
         }
         int complianceLevel = 7;
         if (!source.equals("-1")) {
-            return parseJavaVersion(source.substring(2));
+            return parseJavaVersion(source);
         } else if (!oldSource.equals("-1")) {
-            return parseJavaVersion(oldSource.substring(2));
+            return parseJavaVersion(oldSource);
         } else if (!javaVersion.equals("-1")) {
             return parseJavaVersion(javaVersion);
         }
