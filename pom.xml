@@ -34,7 +34,7 @@
         <connection>scm:git:ssh://github.com/Spirals-Team/maven-repair.git
         </connection>
         <developerConnection>
-            scm:git:[fetch=]https://github.com/Spirals-Team/maven-repair.git[push=]ssh://git@github.com/Spirals-Team/maven-repair.git
+            scm:git:[fetch=]https://github.com/tdurieux/project-info-maven-plugin.git[push=]ssh://git@github.com/tdurieux/project-info-maven-plugin.git
         </developerConnection>
     </scm>
 
